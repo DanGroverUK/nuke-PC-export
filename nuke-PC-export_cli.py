@@ -1,6 +1,7 @@
 # Written by Dan Grover, dan-grover@dan-grover.com If you have any comments,
 # bugs, suggestions, questions, whatever - please email me!
 
+#   v7.1-cli    Altered version that'll get re-branched into the main
 #   v7.0-cli    An alternative to the normal one that works on deadline
 #   v7.0        I'm now setting the version number to 7.0 and using boring old
 #               semantic versioning. It's also now added to git and Pep-8'd.
@@ -10,10 +11,8 @@
 #   v5          Original functionality at the time I joined TJ
 
 import nuke
-import threading
 import timeit
 import cStringIO
-import os
 
 # A generator function that returns the next whitespace split
 # entry in a string. Perfect for getting the next value from
@@ -37,7 +36,6 @@ def writeFile(node, fileOut):
     # if len(nuke.selectedNodes()) != 1:
     #     nuke.message("Exactly one BakedPointCloud node should be selected.")
     #     return
-
 
     # This string represents the XYZ positions
     xyzString = node.knob("serializePoints").getValue()
@@ -115,10 +113,12 @@ def writeFile(node, fileOut):
 
 
 print(sys.argv)
+print("Loading Script File...")
 nuke.scriptSource(sys.argv[1])
 for a in nuke.allNodes():
     if a.Class() == 'BakedPointCloud' and a['disable'].getValue() == 0.0:
         print a['name'].getValue()
         outFile = "".join([sys.argv[2], "\\", a['name'].getValue(), ".csv"])
+        print("Writing out .csv File...")
         writeFile(a, outFile)
         print("Output successfully written to: {outFile}".format(outFile=outFile))
