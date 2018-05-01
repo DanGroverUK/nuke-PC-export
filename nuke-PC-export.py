@@ -1,7 +1,8 @@
 # Written by Dan Grover, dan-grover@dan-grover.com If you have any comments,
 # bugs, suggestions, questions, whatever - please email me!
 
-#   v7.1-cli    Altered version that'll get re-branched into the main
+#   v8.0        The CLI and GUI are now separate, so they'll have separate
+#               version numbers going forwards.
 #   v7.0-cli    An alternative to the normal one that works on deadline
 #   v7.0        I'm now setting the version number to 7.0 and using boring old
 #               semantic versioning. It's also now added to git and Pep-8'd.
@@ -11,45 +12,33 @@
 #   v5          Original functionality at the time I joined TJ
 
 import nuke
-import threading
-import timeit
-import cStringIO
-import os
+import subprocess
+import sys
 
-# A generator function that returns the next whitespace split
-# entry in a string. Perfect for getting the next value from
-# the nuke nobs.
 
 def genUI():
-    pcPanel = nuke.Panel("PC Export - v7.1")
+    pcPanel = nuke.Panel("PC Export - v8.0")
     pcPanel.addFilenameSearch("Output Location:", "")
+    pyPath = ("\\\\files.taylorjames.com\\Library$\\"
+              "Nuke\\python\\nuke-PC-export_cli.py")
+    pcPanel.addFilenameSearch("Python Processing File:", pyPath)
     pcPanel.addButton("Cancel")
     pcPanel.addButton("Process Locally")
-    pcPanel.addButton("Process on Deadline")
     ret = pcPanel.show()
     if ret == 1:
         print(ret)
-        fileLocation = pcPanel.value("Output Location:")
-        commandString = " ".join(["\"C:\\Program Files\\Nuke11.0v2\\Nuke11.0.exe\"",
-                                  "-t",
-                                  "\"C:\\git\\nuke-PC-export\\nuke-PC-export_cli.py\"",
-                                  ("\"" + nuke.root().knob('name').value() + "\""),
-                                  ("\"" + fileLocation + "\"")])
-        print(commandString)
-        # if not (fileLocation.endswith(".csv")):
-        #     fileLocation = fileLocation + ".csv"
-        # threading.Thread(None, writeFile(fileLocation)).start()
-        # writeFile(fileLocation)
+        nukeLocation = sys.executable
+        outputFolder = pcPanel.value("Output Location:")
+        scriptLocation = pcPanel.value("Python Processing File:")
+        nukeScriptLocation = nuke.root().knob('name').value()
+        subprocess.Popen([nukeLocation,
+                          "-t",
+                          scriptLocation,
+                          nukeScriptLocation,
+                          outputFolder],
+                          creationflags=subprocess.CREATE_NEW_CONSOLE)
     else:
         print "Closed!"
 
 
 vars = genUI()
-# print(sys.argv)
-# nuke.scriptSource(sys.argv[1])
-# for a in nuke.allNodes():
-#     if a.Class() == 'BakedPointCloud' and a['disable'].getValue() == 0.0:
-#         print a['name'].getValue()
-#         outFile = "".join([sys.argv[2], "\\", a['name'].getValue(), ".csv"])
-#         writeFile(a, outFile)
-#         print("Output successfully written to: {outFile}".format(outFile=outFile))

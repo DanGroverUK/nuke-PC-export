@@ -1,6 +1,8 @@
 # Written by Dan Grover, dan-grover@dan-grover.com If you have any comments,
 # bugs, suggestions, questions, whatever - please email me!
 
+#   v8.0        The CLI and GUI are now separate, so they'll have separate
+#               version numbers going forwards.
 #   v7.1-cli    Altered version that'll get re-branched into the main
 #   v7.0-cli    An alternative to the normal one that works on deadline
 #   v7.0        I'm now setting the version number to 7.0 and using boring old
@@ -94,23 +96,6 @@ def writeFile(node, fileOut):
     writeString.close()
     # Close the file to save it.
     csvFile.close()
-
-
-# def genUI():
-#     pcPanel = nuke.Panel("PC Export - v7.0")
-#     pcPanel.addFilenameSearch("Output Location:", "")
-#     pcPanel.addButton("Cancel")
-#     pcPanel.addButton("Go!")
-#     ret = pcPanel.show()
-#     if ret:
-#         fileLocation = pcPanel.value("Output Location:")
-#         if not (fileLocation.endswith(".csv")):
-#             fileLocation = fileLocation + ".csv"
-#         threading.Thread(None, writeFile(fileLocation)).start()
-#         # writeFile(fileLocation)
-#     else:
-        # print "Closed!"
-
 
 print(sys.argv)
 print("Loading Script File...")
