@@ -88,10 +88,12 @@ def writeFile(node, fileOut):
         task.setMessage(("Caching point " + str(counter)))
         if (counter % 20000) == 0:
             toc = timeit.default_timer()
-            processingTime = str(toc - tic)
-            print("Time to {} points: {}s".format(str(counter), processingTime))
+            processingTime = str(round((toc - tic), 1))
+            print("Time to {} points: {}s - {}%".format(str(counter),
+                                                        processingTime,
+                                                        str(int(100 * (float(counter) / float(totalPoints))))))
     # Write the output
-    task.setMessage("Writing out the .csv File...")
+    print("Writing out .csv File...")
     csvFile.write(writeString.getvalue())
     writeString.close()
     # Close the file to save it.
@@ -104,6 +106,5 @@ for a in nuke.allNodes():
     if a.Class() == 'BakedPointCloud' and a['disable'].getValue() == 0.0:
         print a['name'].getValue()
         outFile = "".join([sys.argv[2], "\\", a['name'].getValue(), ".csv"])
-        print("Writing out .csv File...")
         writeFile(a, outFile)
         print("Output successfully written to: {outFile}".format(outFile=outFile))
