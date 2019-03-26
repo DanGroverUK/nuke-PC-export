@@ -41,4 +41,4 @@ def genUI():
         print "Closed!"
 
 
-vars = genUI()
+#vars = genUI()
